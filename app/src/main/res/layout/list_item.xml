@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="?android:attr/listPreferredItemHeightLarge"
+                                                   android:id="@+id/constraintLayout"
+>
+
+    <TextView
+            android:text="v0.0.1"
+            android:layout_width="225dp"
+            android:layout_height="21dp" android:id="@+id/txtListVersion"
+            app:layout_constraintTop_toBottomOf="@+id/txtListNameLabel"
+            app:layout_constraintStart_toEndOf="@+id/txtListID" android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"/>
+    <TextView
+            android:text="0"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/txtListID"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+            android:text="user@Test"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:layout_width="226dp"
+            android:layout_height="40dp"
+            android:id="@+id/txtListNameLabel"
+            app:layout_constraintStart_toEndOf="@+id/txtListID"
+            android:layout_marginStart="20dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.2"/>
+    <CheckBox
+            android:text="Joined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/chbListJoined"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

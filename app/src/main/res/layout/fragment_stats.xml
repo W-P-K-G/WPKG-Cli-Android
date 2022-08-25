@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layoutSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:orientation="vertical"
+                  android:layout_height="match_parent"
+                  tools:context=".StatsFragment">
+        <TextView
+                android:text="Cpu Usage:"
+                android:textSize="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/proClientCpu"/>
+        <TextView
+                android:text="0%"
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/txtClientCpu"/>
+        <TextView
+                android:text="Ram Usage:"
+                android:textSize="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView4"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/proClientRam"/>
+        <TextView
+                android:text="0.0GB / 0.0GB"
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/txtClientRam"/>
+        <TextView
+                android:text="Swap Usage:"
+                android:textSize="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView5"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/proClientSwap"/>
+        <TextView
+                android:text="0.0GB / 0.0GB"
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/txtClientSwap"/>
+    </LinearLayout>
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
