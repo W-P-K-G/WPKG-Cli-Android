@@ -1,4 +1,4 @@
-package com.wpkg.cli.commands;
+package me.wpkg.cli.commands;
 
 import android.app.AlertDialog;
 import android.view.View;
@@ -6,9 +6,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.material.snackbar.Snackbar;
-import com.wpkg.cli.android.ClientManagerActivity;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 

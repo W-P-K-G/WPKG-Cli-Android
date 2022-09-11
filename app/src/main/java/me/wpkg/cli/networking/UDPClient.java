@@ -1,4 +1,4 @@
-package com.wpkg.cli.networking;
+package me.wpkg.cli.networking;
 
 
 import java.io.IOException;

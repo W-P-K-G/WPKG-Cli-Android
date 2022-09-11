@@ -1,4 +1,4 @@
-package com.wpkg.cli.utils;
+package me.wpkg.cli.utils;
 
 import android.view.View;
 import com.google.android.material.snackbar.Snackbar;

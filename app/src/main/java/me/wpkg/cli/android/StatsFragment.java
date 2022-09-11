@@ -1,4 +1,4 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.wpkg.cli.networking.UDPClient;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.networking.UDPClient;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 
-import static com.wpkg.cli.utils.Utils.roundTo2DecimalPlace;
+import static me.wpkg.cli.utils.Utils.roundTo2DecimalPlace;
 
 public class StatsFragment extends Fragment
 {

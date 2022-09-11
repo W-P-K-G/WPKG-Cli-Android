@@ -1,24 +1,17 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
-import com.wpkg.cli.networking.UDPClient;
+
+import me.wpkg.cli.networking.UDPClient;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 public class MainActivity extends AppCompatActivity
 {

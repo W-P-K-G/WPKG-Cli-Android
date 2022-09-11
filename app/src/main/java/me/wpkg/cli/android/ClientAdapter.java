@@ -1,15 +1,14 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import com.wpkg.cli.json.JsonMaps;
+
+import me.wpkg.cli.json.JsonMaps;
 
 import java.util.ArrayList;
 

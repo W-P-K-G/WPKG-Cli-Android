@@ -1,4 +1,4 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.wpkg.cli.commands.Command;
-import com.wpkg.cli.commands.RunProcess;
-import com.wpkg.cli.commands.Screenshot;
-import com.wpkg.cli.commands.SendMessage;
+
+import me.wpkg.cli.commands.Command;
+import me.wpkg.cli.commands.RunProcess;
+import me.wpkg.cli.commands.Screenshot;
+import me.wpkg.cli.commands.SendMessage;
 
 import java.util.ArrayList;
 

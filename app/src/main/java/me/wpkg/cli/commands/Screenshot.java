@@ -1,14 +1,13 @@
-package com.wpkg.cli.commands;
+package me.wpkg.cli.commands;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.google.android.material.snackbar.Snackbar;
-import com.wpkg.cli.android.ClientManagerActivity;
-import com.wpkg.cli.android.MainActivity;
-import com.wpkg.cli.android.ScreenshotViewerActivity;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.android.ScreenshotViewerActivity;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 

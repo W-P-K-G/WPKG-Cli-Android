@@ -1,4 +1,4 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +7,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.utils.Utils;
 
 import java.io.InputStream;
 import java.net.URL;

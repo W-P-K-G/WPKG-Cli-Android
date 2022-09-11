@@ -1,29 +1,21 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
-import android.app.ProgressDialog;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.wpkg.cli.networking.UDPClient;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.networking.UDPClient;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
-
-import static com.wpkg.cli.utils.Utils.roundTo2DecimalPlace;
 
 public class ClientManagerActivity extends AppCompatActivity
 {

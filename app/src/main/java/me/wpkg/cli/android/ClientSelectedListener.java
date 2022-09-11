@@ -1,7 +1,7 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.wpkg.cli.json.JsonMaps;
+import me.wpkg.cli.json.JsonMaps;
 
 public interface ClientSelectedListener
 {

@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".WPKGManagerActivity">
+        tools:context="me.wpkg.cli.android.WPKGManagerActivity">
 
     <TextView
             android:text="No client are connected now"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content" android:id="@+id/btnRefresh"
         />
         <Button
-                android:text="Logoff"
+                android:text="Logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/btnDisconnect"
         />

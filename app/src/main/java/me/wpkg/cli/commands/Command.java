@@ -1,12 +1,12 @@
-package com.wpkg.cli.commands;
+package me.wpkg.cli.commands;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.wpkg.cli.android.ClientManagerActivity;
-import com.wpkg.cli.networking.UDPClient;
-import com.wpkg.cli.utils.Utils;
+import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.networking.UDPClient;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.wpkg.cli.json;
+package me.wpkg.cli.json;
 
 public class JsonMaps
 {

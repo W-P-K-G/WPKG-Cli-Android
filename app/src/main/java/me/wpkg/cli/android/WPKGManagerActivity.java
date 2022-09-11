@@ -1,8 +1,7 @@
-package com.wpkg.cli.android;
+package me.wpkg.cli.android;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
@@ -16,9 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.snackbar.Snackbar;
-import com.wpkg.cli.json.JsonMaps;
-import com.wpkg.cli.networking.UDPClient;
-import com.wpkg.cli.utils.Utils;
+
+import me.wpkg.cli.json.JsonMaps;
+import me.wpkg.cli.networking.UDPClient;
+import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;

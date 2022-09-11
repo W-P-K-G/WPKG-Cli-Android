@@ -3,7 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".CommandFragment">
+             tools:context="me.wpkg.cli.android.CommandFragment">
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
