@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/empty_tall_divider.xml" value="0.3703125" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.3572916666666667" />
+        <entry key="app/src/main/res/drawable/ic_share_button.xml" value="0.37135416666666665" />
         <entry key="app/src/main/res/layout/activity_client_manager.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.32155797101449274" />
         <entry key="app/src/main/res/layout/activity_screenshot_viewer.xml" value="0.32653985507246375" />
@@ -17,12 +18,17 @@
         <entry key="app/src/main/res/layout/list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/xd.xml" value="0.32653985507246375" />
         <entry key="app/src/main/res/menu/client_popup_menu.xml" value="0.196875" />
+        <entry key="app/src/main/res/menu/screenshot_share_menu.xml" value="0.36875" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.184375" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.184375" />
+        <entry key="app/src/main/res/xml/paths.xml" value="0.18125" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17_PREVIEW" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
