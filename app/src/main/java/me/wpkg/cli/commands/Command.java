@@ -5,7 +5,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import me.wpkg.cli.android.ClientManagerActivity;
-import me.wpkg.cli.networking.UDPClient;
+import me.wpkg.cli.net.Client;
 import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
@@ -66,21 +66,21 @@ public abstract class Command
 
     protected String receiveFromServer() throws IOException
     {
-        return UDPClient.receiveString();
+        return Client.receiveString();
     }
 
     protected byte[] receiveRawdata()
     {
-        return UDPClient.rawdata_receive();
+        return Client.rawdata_receive();
     };
 
     protected void sendRawdata(byte[] b)
     {
-        UDPClient.rawdata_send(b);
+        Client.rawdata_send(b);
     }
 
     protected void sendToServer(String command) throws IOException
     {
-        UDPClient.sendString(command);
+        Client.sendString(command);
     }
 }

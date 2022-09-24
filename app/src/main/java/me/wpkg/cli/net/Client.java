@@ -1,11 +1,11 @@
-package me.wpkg.cli.networking;
+package me.wpkg.cli.net;
 
 
 import java.io.IOException;
 import java.net.*;
 
 
-public class UDPClient {
+public class Client {
     public static DatagramSocket socket;
     public static InetAddress address;
 
@@ -31,39 +31,28 @@ public class UDPClient {
         return connected;
     }
 
-    public static void sendRegisterPing() throws IOException
+
+    public static void sendString(String msg) throws IOException
     {
-        //this method don't using receiveString and sendString method because using IOException to properly error handling
-        byte[] buf = "register".getBytes();
+        System.out.println("Sended: " + msg);
+        byte[] buf = msg.getBytes();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
 
+        /* Sending Packet */
         socket.send(packet);
+    }
 
-        byte[] buf2 = new byte[65536];
-        packet = new DatagramPacket(buf2, buf2.length);
+    public static String receiveString() throws IOException
+    {
+        byte[] buf = new byte[65536];
+        DatagramPacket packet = new DatagramPacket(buf, buf.length);
 
+        /* Receiving Packet */
         socket.receive(packet);
-    }
 
-    public static void sendString(String msg) throws IOException {
-        System.out.println("Sended: " + msg);
-            byte[] buf = msg.getBytes();
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
-
-            /* Sending Packet */
-            socket.send(packet);
-    }
-
-    public static String receiveString() throws IOException {
-            byte[] buf = new byte[65536];
-            DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
-            /* Receiving Packet */
-            socket.receive(packet);
-
-            String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-            System.out.println("Received: " + msg);
-            return msg;
+        String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
+        System.out.println("Received: " + msg);
+        return msg;
     }
 
     public static String sendCommand(String command) throws IOException {

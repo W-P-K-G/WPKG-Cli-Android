@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+
 import me.wpkg.cli.json.JsonMaps.ClientObject
 
 class ClientAdapter(var clients: ArrayList<ClientObject>, private val listener: ClientSelectedListener) :
@@ -66,19 +67,10 @@ class ClientAdapter(var clients: ArrayList<ClientObject>, private val listener: 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
-        var txtListClientName: TextView
-        var txtListID: TextView
-        var txtListVersion: TextView
-        var chbListJoined: CheckBox
-        var constraintLayout: ConstraintLayout
-
-        init
-        {
-            txtListClientName = itemView.findViewById(R.id.txtListNameLabel)
-            txtListID = itemView.findViewById(R.id.txtListID)
-            chbListJoined = itemView.findViewById(R.id.chbListJoined)
-            txtListVersion = itemView.findViewById(R.id.txtListVersion)
-            constraintLayout = itemView.findViewById(R.id.constraintLayout)
-        }
+        val txtListClientName: TextView = itemView.findViewById(R.id.txtListNameLabel)
+        val txtListID: TextView = itemView.findViewById(R.id.txtListID)
+        val txtListVersion: TextView = itemView.findViewById(R.id.txtListVersion)
+        val chbListJoined: CheckBox = itemView.findViewById(R.id.chbListJoined)
+        val constraintLayout: ConstraintLayout = itemView.findViewById(R.id.constraintLayout)
     }
 }

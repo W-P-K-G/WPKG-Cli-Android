@@ -15,7 +15,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center">
         <TextView
-                android:text="Enter Authtoken:"
+                android:text="Enter password:"
                 android:textSize="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2"/>
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
-                android:id="@+id/txtAuthtoken"/>
+                android:id="@+id/txtPassword"/>
         <TextView
                 android:text="Enter IP:"
                 android:textSize="32dp"

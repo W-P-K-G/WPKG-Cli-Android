@@ -10,11 +10,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.lifecycleScope
 
-import me.wpkg.cli.networking.UDPClient
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.*
 
 import java.io.IOException
+
+import me.wpkg.cli.net.Client
 
 class MainActivity : AppCompatActivity()
 {
@@ -24,7 +27,13 @@ class MainActivity : AppCompatActivity()
         setContentView(R.layout.activity_main)
 
         val btnConnect = findViewById<Button>(R.id.btnConnect)
+        val txtPassword = findViewById<EditText>(R.id.txtPassword)
         val txtIP = findViewById<EditText>(R.id.txtIP)
+
+        val sharedPreferences = getPreferences(MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        txtPassword.setText(sharedPreferences.getString("password",""))
 
         btnConnect.setOnClickListener { view: View? ->
             if (TextUtils.isEmpty(txtIP.text.toString()))
@@ -33,15 +42,23 @@ class MainActivity : AppCompatActivity()
             }
             else
             {
+                editor.putString("password",txtPassword.text.toString()).apply()
+
                 val dialog = ProgressDialog.show(this@MainActivity, "", "Connecting. Please wait...", true)
-                Thread {
+
+                lifecycleScope.launch(Dispatchers.IO) {
                     try
                     {
                         val address = txtIP.text.toString().split(":".toRegex())
-                        UDPClient.connect(address[0], address[1].toInt())
-                        UDPClient.sendRegisterPing()
+                        Client.connect(address[0], address[1].toInt())
+
                         dialog.dismiss()
-                        runOnUiThread { startActivity(Intent(this, WPKGManagerActivity::class.java)) }
+                        when (Client.sendCommand("/registeradmin " + txtPassword.text.toString()))
+                        {
+                            "[REGISTER_SUCCESS]" -> runOnUiThread { startActivity(Intent(this@MainActivity, WPKGManagerActivity::class.java)) }
+                            "[WRONG_PASSWORD]" -> Snackbar.make(view!!, "Wrong password.", Snackbar.LENGTH_LONG).show()
+                            else -> Snackbar.make(view!!, "Register error.", Snackbar.LENGTH_LONG).show()
+                        }
                     }
                     catch (e: IOException)
                     {
@@ -50,7 +67,7 @@ class MainActivity : AppCompatActivity()
                             Snackbar.make(view!!, "Connection failed: " + e.message, Snackbar.LENGTH_LONG).show()
                         }
                     }
-                }.start()
+                }
             }
         }
     }

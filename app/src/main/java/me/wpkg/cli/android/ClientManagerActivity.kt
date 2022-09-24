@@ -6,22 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-import me.wpkg.cli.android.CommandFragment.Companion.newInstance
-import me.wpkg.cli.networking.UDPClient
+import me.wpkg.cli.net.Client
 import me.wpkg.cli.utils.Utils
 
 import java.io.IOException
 
 class ClientManagerActivity : AppCompatActivity()
 {
-    @kotlin.jvm.JvmField
+    @JvmField
     var commandWorks: Boolean = false
-    @kotlin.jvm.JvmField
+    @JvmField
     var statsRefreshing = false
 
     var joined = false
@@ -88,17 +90,17 @@ class ClientManagerActivity : AppCompatActivity()
     private fun disconnect()
     {
         joined = false
-        Thread {
+        lifecycleScope.launch(Dispatchers.IO) {
             try
             {
-                UDPClient.sendCommand("/unjoin")
+                Client.sendCommand("/unjoin")
             }
             catch (e: IOException)
             {
                 Utils.errorSnakeBar(window.decorView.rootView, e)
             }
             runOnUiThread { finish() }
-        }.start()
+        }
     }
 }
 
@@ -107,12 +109,13 @@ class TabAdapter(var parent: ClientManagerActivity, fragmentManager: FragmentMan
         fragmentManager!!, lifecycle!!
     )
 {
-    private var commandFragment: CommandFragment = newInstance()
-    private var statsFragment: StatsFragment = StatsFragment.newInstance()
+    private val commandFragment = CommandFragment.newInstance()
+    private val statsFragment = StatsFragment.newInstance()
 
     override fun createFragment(position: Int): Fragment
     {
-        return when (position) {
+        return when (position)
+        {
             0 -> commandFragment
             1 -> statsFragment
             else -> Fragment()

@@ -12,15 +12,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import me.wpkg.cli.json.JsonMaps.ClientMap
 import me.wpkg.cli.json.JsonMaps.ClientObject
-import me.wpkg.cli.networking.UDPClient
+import me.wpkg.cli.net.Client
 import me.wpkg.cli.utils.Utils
 
 import java.io.IOException
@@ -83,14 +86,14 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
     {
         adapter.clear()
         txtNoClients.visibility = View.INVISIBLE
-        Thread {
+        lifecycleScope.launch(Dispatchers.IO) {
             try
             {
-                val map = getClientList(UDPClient.sendCommand("/rat-list"))
+                val map = getClientList(Client.sendCommand("/rat-list"))
                 if (map.clients.isEmpty())
                 {
                     runOnUiThread { txtNoClients.visibility = View.VISIBLE }
-                    return@Thread
+                    return@launch
                 }
                 for (client in map.clients)
                     runOnUiThread { adapter.addItem(client!!) }
@@ -100,15 +103,15 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
             {
                 Utils.errorSnakeBar(window.decorView.rootView, e)
             }
-        }.start()
+        }
     }
 
     private fun logOff()
     {
-        Thread {
-            UDPClient.logOff()
+        lifecycleScope.launch(Dispatchers.IO) {
+            Client.logOff()
             runOnUiThread { finish() }
-        }.start()
+        }
     }
 
     private fun getClientList(json: String?): ClientMap
@@ -133,12 +136,12 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
             Snackbar.make(window.decorView.rootView, "Client is already joined.", Snackbar.LENGTH_SHORT).show()
         else
         {
-            Thread {
+            lifecycleScope.launch(Dispatchers.IO) {
                 try
                 {
-                    UDPClient.sendCommand("/join " + client.id)
+                    Client.sendCommand("/join " + client.id)
 
-                    val intent = Intent(this, ClientManagerActivity::class.java)
+                    val intent = Intent(this@WPKGManagerActivity, ClientManagerActivity::class.java)
                     intent.putExtra("name", client.name)
                     runOnUiThread { startActivity(intent) }
                 }
@@ -146,7 +149,7 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
                 {
                     Utils.errorSnakeBar(window.decorView.rootView, e)
                 }
-            }.start()
+            }
         }
     }
 
@@ -160,14 +163,14 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Kill")
                 builder.setMessage("Are you want to kill " + client.name + "?")
-                builder.setPositiveButton("OK") { dialog: DialogInterface, which: Int ->
+                builder.setPositiveButton("OK") { dialog: DialogInterface, _: Int ->
                     dialog.dismiss()
-                    Thread {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         try
                         {
-                            UDPClient.sendCommand("/close " + client.id)
+                            Client.sendCommand("/close " + client.id)
                             runOnUiThread {
-                                Toast.makeText(this, "Client killed!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@WPKGManagerActivity, "Client killed!", Toast.LENGTH_SHORT).show()
                                 refreshList()
                             }
                         }
@@ -175,7 +178,7 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
                         {
                             Utils.errorSnakeBar(window.decorView.rootView, e)
                         }
-                    }.start()
+                    }
                 }
                 builder.setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
 

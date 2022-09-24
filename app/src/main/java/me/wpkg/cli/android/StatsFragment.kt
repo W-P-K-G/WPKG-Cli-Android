@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package me.wpkg.cli.android
 
 import android.annotation.SuppressLint
@@ -9,8 +11,11 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import me.wpkg.cli.networking.UDPClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import me.wpkg.cli.net.Client
 import me.wpkg.cli.utils.Utils
 import java.io.IOException
 
@@ -47,10 +52,10 @@ class StatsFragment : Fragment()
 
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.layoutSwipeRefresh)
         swipeRefreshLayout.setOnRefreshListener {
-            Thread {
+            lifecycleScope.launch(Dispatchers.IO) {
                 refreshStats()
                 parent!!.runOnUiThread { swipeRefreshLayout.isRefreshing = false }
-            }.start()
+            }
         }
         return view
     }
@@ -58,12 +63,10 @@ class StatsFragment : Fragment()
     private fun refresh()
     {
         val dialog = ProgressDialog.show(parent, "", "Refreshing. Please wait...", true)
-        Thread {
-
+        lifecycleScope.launch(Dispatchers.IO) {
             refreshStats()
             parent!!.runOnUiThread { dialog.dismiss() }
-
-        }.start()
+        }
     }
 
     private fun statsThread()
@@ -87,7 +90,7 @@ class StatsFragment : Fragment()
         try
         {
             parent!!.statsRefreshing = true
-            val mess = UDPClient.sendCommand("stat").split(" ".toRegex())
+            val mess = Client.sendCommand("stat").split(" ".toRegex())
 
             val cpu = Math.floor(mess[0].toFloat().toDouble()).toInt()
             val memfree = Utils.roundTo2DecimalPlace(mess[1].toDouble() / 1024 / 1024 / 1024)

@@ -14,6 +14,9 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import me.wpkg.cli.utils.Utils
 
@@ -89,14 +92,15 @@ class ScreenshotViewerActivity : AppCompatActivity()
         super.onStart()
         val bundle = intent.extras
         progressBar.visibility = View.VISIBLE
-        Thread {
+
+        lifecycleScope.launch(Dispatchers.IO) {
             try
             {
                 val url = bundle!!.getString("url")
 
                 val input = URL(bundle.getString("url")).openStream()
                 bitmap = BitmapFactory.decodeStream(input)
-                this.url = url
+                this@ScreenshotViewerActivity.url = url
 
                 runOnUiThread {
                     imgScreenshot.setImageBitmap(bitmap)
@@ -107,7 +111,7 @@ class ScreenshotViewerActivity : AppCompatActivity()
             {
                 Utils.errorSnakeBar(window.decorView.rootView, e)
             }
-        }.start()
+        }
     }
 
     inner class SharedScreenshot(bitmap: Bitmap, context: Context)
