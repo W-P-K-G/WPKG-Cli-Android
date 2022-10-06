@@ -6,8 +6,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class RunProcess extends Command
     }
 
     @Override
-    public void execute(View view,ClientManagerActivity parent) throws IOException
+    public void execute(View view, ClientManagerActivity parent, ErrorHandler errorHandler) throws IOException
     {
         LinearLayout layout = new LinearLayout(parent);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -49,9 +49,12 @@ public class RunProcess extends Command
                     String command = txtCommand.getText().toString();
                     String args = txtArgs.getText().toString();
 
-                    sendCommand("run " + command + " " + args);
+                    errorHandler.check(sendCommand("run " + command + " " + args));
 
-                    parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Process runned!", Toast.LENGTH_SHORT).show());
+                    if (errorHandler.ok())
+                        parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Process runned!", Toast.LENGTH_SHORT).show());
+                    else
+                        failDialog(view,"Error running process by WPKG");
                 }
                 catch (IOException e)
                 {

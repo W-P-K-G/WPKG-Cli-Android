@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class SendMessage extends Command
     }
 
     @Override
-    public void execute(View view,ClientManagerActivity parent) throws IOException
+    public void execute(View view, ClientManagerActivity parent, ErrorHandler errorHandler) throws IOException
     {
         final EditText taskEditText = new EditText(parent);
         AlertDialog.Builder builder = new AlertDialog.Builder(parent);
@@ -34,7 +34,10 @@ public class SendMessage extends Command
                     String message = taskEditText.getText().toString();
                     sendCommand("msg " + message);
 
-                    parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Message sended!", Toast.LENGTH_SHORT).show());
+                    if (errorHandler.ok())
+                        parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Message sended!", Toast.LENGTH_SHORT).show());
+                    else
+                        failDialog(view,"Error running process by WPKG");
                 }
                 catch (IOException e)
                 {

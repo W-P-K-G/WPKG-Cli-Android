@@ -20,12 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import me.wpkg.cli.commands.error.ErrorHandler
 import me.wpkg.cli.json.JsonMaps.ClientMap
 import me.wpkg.cli.json.JsonMaps.ClientObject
 import me.wpkg.cli.net.Client
 import me.wpkg.cli.utils.Utils
-
 import java.io.IOException
 
 class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSelectedListener
@@ -37,10 +36,24 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
     private lateinit var btnRefresh: Button
     private lateinit var txtNoClients: TextView
 
+    private lateinit var errorHandler: ErrorHandler
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wpkgmanager)
+
+        //error handler
+        errorHandler = ErrorHandler()
+
+        errorHandler.setNotAuthorizedEvent {
+            parent.runOnUiThread {
+                Toast.makeText(parent.window.context, "Server password expired.", Toast.LENGTH_LONG).show()
+                val i = Intent(parent, MainActivity::class.java)
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                parent.startActivity(i)
+            }
+        }
 
         btnLogoff = findViewById(R.id.btnDisconnect)
         btnLogoff.setOnClickListener(this)
@@ -89,15 +102,18 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
         lifecycleScope.launch(Dispatchers.IO) {
             try
             {
-                val map = getClientList(Client.sendCommand("/rat-list"))
-                if (map.clients.isEmpty())
-                {
-                    runOnUiThread { txtNoClients.visibility = View.VISIBLE }
-                    return@launch
-                }
-                for (client in map.clients)
-                    runOnUiThread { adapter.addItem(client!!) }
+                val map = getClientList(errorHandler.check(Client.sendCommand("/rat-list")))
 
+                if (errorHandler.ok())
+                {
+                    if (map.clients.isEmpty())
+                    {
+                        runOnUiThread { txtNoClients.visibility = View.VISIBLE }
+                        return@launch
+                    }
+                    for (client in map.clients)
+                        runOnUiThread { adapter.addItem(client!!) }
+                }
             }
             catch (e: IOException)
             {
@@ -139,11 +155,14 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
             lifecycleScope.launch(Dispatchers.IO) {
                 try
                 {
-                    Client.sendCommand("/join " + client.id)
+                    errorHandler.check(Client.sendCommand("/join " + client.id))
 
-                    val intent = Intent(this@WPKGManagerActivity, ClientManagerActivity::class.java)
-                    intent.putExtra("name", client.name)
-                    runOnUiThread { startActivity(intent) }
+                    if (errorHandler.ok())
+                    {
+                        val intent = Intent(this@WPKGManagerActivity, ClientManagerActivity::class.java)
+                        intent.putExtra("name", client.name)
+                        runOnUiThread { startActivity(intent) }
+                    }
                 }
                 catch (e: IOException)
                 {
@@ -168,10 +187,13 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
                     lifecycleScope.launch(Dispatchers.IO) {
                         try
                         {
-                            Client.sendCommand("/close " + client.id)
-                            runOnUiThread {
-                                Toast.makeText(this@WPKGManagerActivity, "Client killed!", Toast.LENGTH_SHORT).show()
-                                refreshList()
+                            errorHandler.check(Client.sendCommand("/close " + client.id))
+                            if (errorHandler.ok())
+                            {
+                                runOnUiThread {
+                                    Toast.makeText(this@WPKGManagerActivity, "Client killed!", Toast.LENGTH_SHORT).show()
+                                    refreshList()
+                                }
                             }
                         }
                         catch (e: IOException)

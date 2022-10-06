@@ -1,10 +1,13 @@
 package me.wpkg.cli.commands;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import me.wpkg.cli.android.ClientManagerActivity;
+import me.wpkg.cli.android.MainActivity;
+import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.net.Client;
 import me.wpkg.cli.utils.Utils;
 
@@ -16,6 +19,8 @@ public abstract class Command
 
     ClientManagerActivity parent;
 
+    ErrorHandler errorHandler = new ErrorHandler();
+
     public Command(String command, String name, LinearLayout layout, ClientManagerActivity parent)
     {
         this.command = command;
@@ -25,6 +30,18 @@ public abstract class Command
 
         Button button = new Button(layout.getContext());
         button.setText(name);
+
+        errorHandler.setSessionExpiredEvent(() -> parent.runOnUiThread(() ->{
+            Toast.makeText(parent.getWindow().getContext(),"Client disconnected. Session expired.",Toast.LENGTH_LONG).show();
+            parent.finish();
+        }));
+
+        errorHandler.setNotAuthorizedEvent(() -> parent.runOnUiThread(() -> {
+            Toast.makeText(parent.getWindow().getContext(),"Server password expired.",Toast.LENGTH_LONG).show();
+            Intent i = new Intent(parent, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            parent.startActivity(i);
+        }));
 
         button.setOnClickListener((view) ->
         {
@@ -40,7 +57,8 @@ public abstract class Command
             try
             {
                 parent.commandWorks = true;
-                execute(view,parent);
+                execute(view,parent,errorHandler);
+                errorHandler.clear();
             }
             catch (Exception e)
             {
@@ -51,20 +69,25 @@ public abstract class Command
         layout.addView(button);
     }
 
-    public abstract void execute(View view,ClientManagerActivity parent) throws IOException;
+    public abstract void execute(View view, ClientManagerActivity parent, ErrorHandler errorHandler) throws IOException;
 
     protected void end()
     {
         parent.commandWorks = false;
     }
 
-    protected String sendCommand(String command) throws IOException
+    public void failDialog(View view,String message)
     {
-        sendToServer(command);
-        return receiveFromServer();
+        Toast.makeText(view.getContext(),message,Toast.LENGTH_LONG).show();
     }
 
-    protected String receiveFromServer() throws IOException
+    protected String sendCommand(String command) throws IOException
+    {
+        send(command);
+        return receive();
+    }
+
+    protected String receive() throws IOException
     {
         return Client.receiveString();
     }
@@ -79,7 +102,7 @@ public abstract class Command
         Client.rawdata_send(b);
     }
 
-    protected void sendToServer(String command) throws IOException
+    protected void send(String command) throws IOException
     {
         Client.sendString(command);
     }

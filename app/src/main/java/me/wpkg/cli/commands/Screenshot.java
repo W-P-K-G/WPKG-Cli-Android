@@ -4,9 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import me.wpkg.cli.android.ClientManagerActivity;
 import me.wpkg.cli.android.ScreenshotViewerActivity;
+import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Screenshot extends Command{
     }
 
     @Override
-    public void execute(View view,ClientManagerActivity parent) throws IOException
+    public void execute(View view, ClientManagerActivity parent, ErrorHandler errorHandler) throws IOException
     {
         ProgressDialog dialog; dialog = ProgressDialog.show(parent, "",
             "Waiting for screenshot...", true);
@@ -25,15 +25,25 @@ public class Screenshot extends Command{
         new Thread(() -> {
             try
             {
-                String url = sendCommand("screenshot");
+                String url = errorHandler.check(sendCommand("screenshot"));
 
-                parent.runOnUiThread(() -> {
-                    dialog.dismiss();
+                dialog.dismiss();
 
-                    Intent intent = new Intent(parent, ScreenshotViewerActivity.class);
-                    intent.putExtra("url", url);
-                    parent.startActivity(intent);
-                });
+                switch (errorHandler.get())
+                {
+                    case OK: {
+                        parent.runOnUiThread(() -> {
+                            Intent intent = new Intent(parent, ScreenshotViewerActivity.class);
+                            intent.putExtra("url", url);
+                            parent.startActivity(intent);
+                        });
+                        break;
+                    }
+                    case ERROR: {
+                        parent.runOnUiThread(() -> failDialog(view,"Error creating screenshot by WPKG"));
+                        break;
+                    }
+                }
             }
             catch (IOException e)
             {
