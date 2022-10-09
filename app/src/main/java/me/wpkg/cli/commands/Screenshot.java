@@ -31,18 +31,14 @@ public class Screenshot extends Command{
 
                 switch (errorHandler.get())
                 {
-                    case OK: {
+                    case OK:
                         parent.runOnUiThread(() -> {
                             Intent intent = new Intent(parent, ScreenshotViewerActivity.class);
                             intent.putExtra("url", url);
                             parent.startActivity(intent);
                         });
                         break;
-                    }
-                    case ERROR: {
-                        parent.runOnUiThread(() -> failDialog(view,"Error creating screenshot by WPKG"));
-                        break;
-                    }
+                    case ERROR: failDialog(view,"WPKG screenshot error: " + errorHandler.msg()); break;
                 }
             }
             catch (IOException e)

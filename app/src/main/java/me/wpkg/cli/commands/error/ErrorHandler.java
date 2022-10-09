@@ -4,7 +4,8 @@ import java.util.regex.Pattern;
 
 public class ErrorHandler
 {
-    Errors error = Errors.OK;
+    private Errors error = Errors.OK;
+    private String msg;
 
     public enum Errors
     {
@@ -67,9 +68,15 @@ public class ErrorHandler
         return error == Errors.ERROR;
     }
 
+    public String msg()
+    {
+        return msg;
+    }
+
     public void clear()
     {
         error = null;
+        msg = "";
     }
 
     public String check(String message)
@@ -77,6 +84,6 @@ public class ErrorHandler
         error = byCode(message);
         error.executeEvent();
 
-        return message.replaceFirst(Pattern.quote(error.code), "");
+        return msg = message.replaceFirst(Pattern.quote(error.code), "");
     }
 }

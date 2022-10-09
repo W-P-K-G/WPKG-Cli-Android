@@ -29,7 +29,6 @@ import java.io.IOException
 
 class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSelectedListener
 {
-
     lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ClientAdapter
     private lateinit var btnLogoff: Button
@@ -47,11 +46,12 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
         errorHandler = ErrorHandler()
 
         errorHandler.setNotAuthorizedEvent {
-            parent.runOnUiThread {
-                Toast.makeText(parent.window.context, "Server password expired.", Toast.LENGTH_LONG).show()
-                val i = Intent(parent, MainActivity::class.java)
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                parent.startActivity(i)
+            runOnUiThread {
+                Toast.makeText(window.context, "Server password expired.", Toast.LENGTH_LONG).show()
+
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             }
         }
 
@@ -102,10 +102,11 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
         lifecycleScope.launch(Dispatchers.IO) {
             try
             {
-                val map = getClientList(errorHandler.check(Client.sendCommand("/rat-list")))
+                val json = errorHandler.check(Client.sendCommand("/rat-list"))
 
                 if (errorHandler.ok())
                 {
+                    val map = getClientList(json)
                     if (map.clients.isEmpty())
                     {
                         runOnUiThread { txtNoClients.visibility = View.VISIBLE }
@@ -118,6 +119,10 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
             catch (e: IOException)
             {
                 Utils.errorSnakeBar(window.decorView.rootView, e)
+            }
+            catch (e: JsonProcessingException)
+            {
+                Snackbar.make(window.decorView.rootView, "JSON parsing failed: " + e.message, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -133,17 +138,7 @@ class WPKGManagerActivity : AppCompatActivity(), View.OnClickListener, ClientSel
     private fun getClientList(json: String?): ClientMap
     {
         val objectMapper = ObjectMapper()
-        lateinit var clientJSON: ClientMap
-
-        try
-        {
-            clientJSON = objectMapper.readValue(json, ClientMap::class.java)
-        }
-        catch (e: JsonProcessingException)
-        {
-            Snackbar.make(window.decorView.rootView, "JSON parsing failed: " + e.message, Snackbar.LENGTH_SHORT).show()
-        }
-        return clientJSON
+        return objectMapper.readValue(json, ClientMap::class.java)
     }
 
     override fun clientSelected(client: ClientObject)

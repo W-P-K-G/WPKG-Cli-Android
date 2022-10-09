@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import me.wpkg.cli.android.ClientManagerActivity;
 import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.utils.Utils;
@@ -51,10 +50,11 @@ public class RunProcess extends Command
 
                     errorHandler.check(sendCommand("run " + command + " " + args));
 
-                    if (errorHandler.ok())
-                        parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Process runned!", Toast.LENGTH_SHORT).show());
-                    else
-                        failDialog(view,"Error running process by WPKG");
+                    switch (errorHandler.get())
+                    {
+                        case OK: successDialog(view, "Process runned!"); break;
+                        case ERROR: failDialog(view,"WPKG run process error: " + errorHandler.msg()); break;
+                    }
                 }
                 catch (IOException e)
                 {

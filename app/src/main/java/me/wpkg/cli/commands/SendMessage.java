@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import me.wpkg.cli.android.ClientManagerActivity;
 import me.wpkg.cli.commands.error.ErrorHandler;
 import me.wpkg.cli.utils.Utils;
@@ -32,12 +31,14 @@ public class SendMessage extends Command
                 try
                 {
                     String message = taskEditText.getText().toString();
-                    sendCommand("msg " + message);
+                    errorHandler.check(sendCommand("msg " + message));
 
-                    if (errorHandler.ok())
-                        parent.runOnUiThread(() -> Toast.makeText(view.getContext(), "Message sended!", Toast.LENGTH_SHORT).show());
-                    else
-                        failDialog(view,"Error running process by WPKG");
+                    switch (errorHandler.get())
+                    {
+                        case OK: successDialog(view,"Message sended!"); break;
+                        case ERROR: failDialog(view,"WPKG send message error: " + errorHandler.msg()); break;
+                    }
+
                 }
                 catch (IOException e)
                 {

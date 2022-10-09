@@ -78,7 +78,12 @@ public abstract class Command
 
     public void failDialog(View view,String message)
     {
-        Toast.makeText(view.getContext(),message,Toast.LENGTH_LONG).show();
+        parent.runOnUiThread(() -> Toast.makeText(view.getContext(),message,Toast.LENGTH_LONG).show());
+    }
+
+    public void successDialog(View view,String message)
+    {
+        parent.runOnUiThread(() -> Toast.makeText(view.getContext(),message,Toast.LENGTH_LONG).show());
     }
 
     protected String sendCommand(String command) throws IOException
