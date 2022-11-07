@@ -97,13 +97,11 @@ public abstract class Command
         return Client.receiveString();
     }
 
-    protected byte[] receiveRawdata()
-    {
+    protected byte[] receiveRawdata() throws IOException {
         return Client.rawdata_receive();
     };
 
-    protected void sendRawdata(byte[] b)
-    {
+    protected void sendRawdata(byte[] b) throws IOException {
         Client.rawdata_send(b);
     }
 

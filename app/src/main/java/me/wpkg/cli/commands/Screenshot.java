@@ -11,8 +11,10 @@ import me.wpkg.cli.utils.Utils;
 
 import java.io.IOException;
 
-public class Screenshot extends Command{
-    public Screenshot(LinearLayout layout, ClientManagerActivity parent) {
+public class Screenshot extends Command
+{
+    public Screenshot(LinearLayout layout, ClientManagerActivity parent)
+    {
         super("screenshot", "Make screenshot", layout, parent);
     }
 

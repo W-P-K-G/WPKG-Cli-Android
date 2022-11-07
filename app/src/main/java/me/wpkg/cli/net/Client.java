@@ -1,110 +1,73 @@
 package me.wpkg.cli.net;
 
-
 import java.io.IOException;
-import java.net.*;
-
 
 public class Client {
-    public static DatagramSocket socket;
-    public static InetAddress address;
+    protected static boolean connected;
 
-    public static int port;
+    private static Protocol protocol;
 
-    public static boolean connected;
+    public static void setProtocol(Protocol protocol) {
+        Client.protocol = protocol;
+    }
 
-    public static void connect(String ip, int p) throws SocketException, UnknownHostException {
-        /* Getting IP Address */
-        address = InetAddress.getByName(ip);
-        port = p;
+    public static Protocol getProtocol() {
+        return protocol;
+    }
 
-        /* Creating Socket */
-        socket = new DatagramSocket();
-
-        /* Setting Timeout */
-        socket.setSoTimeout(20 * 1000);
-
-        connected = true;
+    public static void connect(String ip, int p) throws IOException {
+        switch (protocol) {
+            case TCP: TCPClient.connect(ip,p); break;
+            case UDP: UDPClient.connect(ip,p); break;
+        }
     }
 
     public static boolean isConnected() {
         return connected;
     }
 
-
-    public static void sendString(String msg) throws IOException
-    {
-        System.out.println("Sended: " + msg);
-        byte[] buf = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
-
-        /* Sending Packet */
-        socket.send(packet);
-    }
-
-    public static String receiveString() throws IOException
-    {
-        byte[] buf = new byte[65536];
-        DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
-        /* Receiving Packet */
-        socket.receive(packet);
-
-        String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-        System.out.println("Received: " + msg);
-        return msg;
-    }
-
-    public static String sendCommand(String command) throws IOException {
-        sendString(command);
-        return receiveString();
-    }
-
-    public static byte[] rawdata_receive()
-    {
-        try
-        {
-            byte[] buf = new byte[65536];
-            DatagramPacket packet = new DatagramPacket(buf, buf.length);
-
-            /* Receiving Packet */
-            socket.receive(packet);
-
-            int len = packet.getLength();
-            byte[] ret = new byte[len];
-
-            System.arraycopy(buf, 0, ret, 0, len);
-
-            return ret;
+    public static void sendString(String msg) throws IOException {
+        switch (protocol) {
+            case TCP: TCPClient.sendString(msg); break;
+            case UDP: UDPClient.sendString(msg); break;
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+    }
+
+    public static String receiveString() throws IOException {
+        switch (protocol) {
+            case TCP: return TCPClient.receiveString();
+            case UDP: return UDPClient.receiveString();
         }
         return null;
     }
 
-    public static void rawdata_send(byte[] b)
-    {
-        DatagramPacket p = new DatagramPacket(b, b.length, address, port);
-        try
-        {
-            socket.send(p);
+    public static String sendCommand(String command) throws IOException {
+        switch (protocol) {
+            case TCP: return TCPClient.sendCommand(command);
+            case UDP: return UDPClient.sendCommand(command);
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+        return null;
+    }
+
+    public static byte[] rawdata_receive() throws IOException {
+        switch (protocol) {
+            case TCP: return TCPClient.rawdata_receive();
+            case UDP: return UDPClient.rawdata_receive();
+        }
+        return null;
+    }
+
+    public static void rawdata_send(byte[] b) throws IOException {
+        switch (protocol) {
+            case TCP: TCPClient.rawdata_send(b); break;
+            case UDP: UDPClient.rawdata_send(b); break;
         }
     }
 
-    public static void logOff()
-    {
-        if (socket.isClosed()) return;
-        try {
-            sendString("/disconnect");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public static void logOff() throws IOException {
+        switch (protocol) {
+            case TCP: TCPClient.logOff(); break;
+            case UDP: UDPClient.logOff(); break;
         }
-        socket.close();
     }
 }

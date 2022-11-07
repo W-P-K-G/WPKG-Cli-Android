@@ -9,15 +9,16 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.*
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import me.wpkg.cli.net.Client
+import me.wpkg.cli.net.Protocol
 import java.io.IOException
 
-import me.wpkg.cli.net.Client
 
 class MainActivity : AppCompatActivity()
 {
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity()
 
         val btnConnect = findViewById<Button>(R.id.btnConnect)
         val txtPassword = findViewById<EditText>(R.id.txtPassword)
-        val txtIP = findViewById<EditText>(R.id.txtIP)
+        val txtIP = findViewById<TextView>(R.id.txtIP)
 
         val sharedPreferences = getPreferences(MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -44,15 +45,16 @@ class MainActivity : AppCompatActivity()
             {
                 editor.putString("password",txtPassword.text.toString()).apply()
 
-                val dialog = ProgressDialog.show(this@MainActivity, "", "Connecting. Please wait...", true)
+                val connectdialog = ProgressDialog.show(this@MainActivity, "", "Connecting. Please wait...", true)
 
                 lifecycleScope.launch(Dispatchers.IO) {
                     try
                     {
                         val address = txtIP.text.toString().split(":".toRegex())
+                        Client.setProtocol(Protocol.TCP)
                         Client.connect(address[0], address[1].toInt())
 
-                        dialog.dismiss()
+                        connectdialog.dismiss()
                         when (Client.sendCommand("/registeradmin " + txtPassword.text.toString()))
                         {
                             "[REGISTER_SUCCESS]" -> runOnUiThread { startActivity(Intent(this@MainActivity, WPKGManagerActivity::class.java)) }
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity()
                     catch (e: IOException)
                     {
                         runOnUiThread {
-                            dialog.dismiss()
+                            connectdialog.dismiss()
                             Snackbar.make(view!!, "Connection failed: " + e.message, Snackbar.LENGTH_LONG).show()
                         }
                     }

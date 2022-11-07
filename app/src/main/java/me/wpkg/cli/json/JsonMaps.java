@@ -34,4 +34,19 @@ public class JsonMaps
 
         }
     }
+
+    public static class AddressJSON {
+        public uAddresses[] uAddresses;
+        public tAddresses[] tAddresses;
+
+        public static class uAddresses {
+            public String ip;
+            public int port;
+        }
+
+        public static class tAddresses {
+            public String ip;
+            public int port;
+        }
+    }
 }
