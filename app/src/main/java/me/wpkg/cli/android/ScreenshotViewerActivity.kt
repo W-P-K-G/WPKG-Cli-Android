@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import me.wpkg.cli.utils.Utils
 
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
@@ -30,7 +31,7 @@ class ScreenshotViewerActivity : AppCompatActivity()
     private lateinit var imgScreenshot: ImageView
     private lateinit var progressBar: ProgressBar
 
-    private var url: String? = ""
+    private var path: String = ""
     private lateinit var bitmap: Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -63,13 +64,13 @@ class ScreenshotViewerActivity : AppCompatActivity()
         }
         if (item.itemId == R.id.btnScreenshotShare)
         {
-            if (url == "")
+            if (path == "")
                 Toast.makeText(this, "Screenshot not loaded!", Toast.LENGTH_SHORT).show()
             else
             {
                 try
                 {
-                    val screenshot = SharedScreenshot(bitmap, this)
+                    val screenshot = SharedScreenshot(File(path), this)
                     val sharingIntent = Intent(Intent.ACTION_SEND)
 
                     sharingIntent.type = "image/png"
@@ -96,11 +97,10 @@ class ScreenshotViewerActivity : AppCompatActivity()
         lifecycleScope.launch(Dispatchers.IO) {
             try
             {
-                val url = bundle!!.getString("url")
+                path = bundle!!.getString("path")!!;
 
-                val input = URL(bundle.getString("url")).openStream()
+                val input = FileInputStream(File(path))
                 bitmap = BitmapFactory.decodeStream(input)
-                this@ScreenshotViewerActivity.url = url
 
                 runOnUiThread {
                     imgScreenshot.setImageBitmap(bitmap)
@@ -114,17 +114,12 @@ class ScreenshotViewerActivity : AppCompatActivity()
         }
     }
 
-    inner class SharedScreenshot(bitmap: Bitmap, context: Context)
+    inner class SharedScreenshot(private val screenshot: File, context: Context)
     {
-        var uri: Uri
-        private var imageFolder = File(cacheDir, "wpkgScreenshots")
-        private var screenshot: File
+        val uri: Uri;
 
         init
         {
-            imageFolder.mkdir()
-            screenshot = File(imageFolder, "wpkgScreenshot.png")
-
             val outputStream = FileOutputStream(screenshot)
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream)
             outputStream.flush()
@@ -134,7 +129,6 @@ class ScreenshotViewerActivity : AppCompatActivity()
 
         fun destroy()
         {
-            imageFolder.deleteOnExit()
             screenshot.deleteOnExit()
         }
     }

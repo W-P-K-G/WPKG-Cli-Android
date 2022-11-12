@@ -1,8 +1,5 @@
-@file:Suppress("DEPRECATION")
-
 package me.wpkg.cli.android
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -45,7 +42,8 @@ class MainActivity : AppCompatActivity()
             {
                 editor.putString("password",txtPassword.text.toString()).apply()
 
-                val connectdialog = ProgressDialog.show(this@MainActivity, "", "Connecting. Please wait...", true)
+                val connectdialog = ProgressDialog(this@MainActivity, "", "Connecting. Please wait...")
+                connectdialog.show()
 
                 lifecycleScope.launch(Dispatchers.IO) {
                     try

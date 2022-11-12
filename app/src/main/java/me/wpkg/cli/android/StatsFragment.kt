@@ -88,7 +88,8 @@ class StatsFragment : Fragment()
 
     private fun refresh()
     {
-        val dialog = ProgressDialog.show(parent, "", "Refreshing. Please wait...", true)
+        val dialog = ProgressDialog(parent, "", "Refreshing. Please wait...")
+        dialog.show()
         lifecycleScope.launch(Dispatchers.IO) {
             refreshStats()
             parent!!.runOnUiThread { dialog.dismiss() }

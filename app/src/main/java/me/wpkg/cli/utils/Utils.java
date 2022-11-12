@@ -40,14 +40,11 @@ public class Utils
         }
     }
 
-    public static String readStringFromURL(String requestURL) throws IOException
-    {
+    public static String readStringFromURL(String requestURL) throws IOException {
         try (Scanner scanner = new Scanner(new URL(requestURL).openStream(),
-                StandardCharsets.UTF_8.toString()))
-        {
+                StandardCharsets.UTF_8.toString())) {
             scanner.useDelimiter("\\A");
             return scanner.hasNext() ? scanner.next() : "";
         }
     }
-
 }
