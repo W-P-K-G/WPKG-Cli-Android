@@ -57,7 +57,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtIP"
-                    android:text="tcp.wpkg.me:3217"
+                    android:text="s1.ct8.pl:3217"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="IP Address"/>
